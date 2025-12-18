@@ -1,7 +1,7 @@
 # import os, sys
 # sys.path.insert(1, "/".join(os.path.realpath(__file__).split("/")[0:-2]))
 
-from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
 from src.utill.make_para import making_para
 # from langchain_core.tools import tool
 
@@ -9,14 +9,18 @@ from src.utill.make_para import making_para
 def transcript_eng(video_id: str) -> str : 
     """
     This function accept video id as an argument,  call the youtube transcript api and then return the youtube transcript in english 
+   
     """
-    ytt_api = YouTubeTranscriptApi()
-    
-    fetched_transcript = ytt_api.fetch(video_id)
-    
-    list_of_dict = fetched_transcript.to_raw_data()
-    
-    return making_para(list_of_dict)
+    try:
+        ytt_api = YouTubeTranscriptApi()
+
+        fetched_transcript = ytt_api.fetch(video_id)
+
+        list_of_dict = fetched_transcript.to_raw_data()
+
+        return making_para(list_of_dict)
+    except TranscriptsDisabled:
+        print("No captions available for this video.")
 
 
 # if __name__=="__main__":
